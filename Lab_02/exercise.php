@@ -5,19 +5,25 @@
 </head>
 
 <body>
-    <font size=5>Thank you: Got Your Input.</font>
+    <font size=5>Thank you: Got Your Input. The background color is your favorite color.</font>
     <br />
     <?php
     $username = $_POST["username"];
     $class = $_POST["class"];
     $university = $_POST["university"];
+    $birthday = $_POST["birthday"];
+    $favcolor = $_POST["favcolor"];
     $hobby_1 = $_POST["hobby_1"];
     $hobby_2 = $_POST["hobby_2"];
     $hobby_3 = $_POST["hobby_3"];
     $language = $_POST["fav_language"];
     $age = $_POST["age"];
+    
+    echo "<body style='background-color:$favcolor'>";
     print("Hello, $username\n");
     print("You are studying at $class, $university\n");
+    print("<br/>");
+    print("Your birthday is $birthday\n");
     print("<br/>");
     print("Your hobby is: ");
     print("<br/>");
