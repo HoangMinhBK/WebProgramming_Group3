@@ -1,7 +1,7 @@
 <html>
     <head><title> single form </title></head>
     <body>
-        <form ACTION = "submitted.php" METHOD = "POST">
+        <form ACTION = "3.1submitted.php" METHOD = "POST">
             <h4> 
                 Enter your name and select date and time for appointment 
             </h4>
