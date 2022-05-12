@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <title>Business Registration</title>
+    <body>
+      <h1>Business Registration</h1>
+      <p>Record inserted as shown below</p>
+      <div>
+        <p>Selected category values are highlighted:</p>
+        <form action="BusinessRegistration.php" method="POST">
+          <select name="categories" multiple="multiple">
+            <option value="Automotive Parts and Supplies">
+              Automotive Parts and Supplies
+            </option>
+            <option value="Seafood Stores and Restaurants">
+              Seafood Stores and Restaurants
+            </option>
+            <option value="Health and Beauty">Health and Beauty</option>
+            <option value="Schools and Colleges">School adn Colleges</option>
+          </select>
+        </form>
+      </div>
+      <form action="BusinessRegistration.php" method="POST">
+        <br />
+        Business ID:
+        <input type="text" maxlength="40" name="business_id" />
+        <br />
+        Business Name:
+        <input type="text" maxlength="40" name="business_name" />
+        <br />
+        Address:
+        <input type="text" maxlength="20" name="address" />
+        <br />
+        City:
+        <input type="text" maxlength="50" name="city" />
+        <br />
+        Telephone:
+        <input type="text" name="telephone" />
+        <br />
+        URL:
+        <input type="text" name="url" />
+        <br />
+
+        <input type="submit" value="Add Business" />
+      </form>
+    </body>
+  </head>
+</html>
