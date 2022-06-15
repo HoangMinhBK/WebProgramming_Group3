@@ -1,0 +1,16 @@
+H1 {
+    text-align: center;
+}
+P { margin: 0.25in;
+    border: 0.25in solid black;
+    padding: 0.25in;
+    background: url(https://img.freepik.com/free-photo/wrinkled-white-paper-texture-background_89245-52.jpg);  
+}
+body {
+    background: url(https://previews.123rf.com/images/dutourdumonde/dutourdumonde1112/dutourdumonde111200011/11365561-white-brick-wall-background.jpg);
+}
+.banner {
+    background: url(https://d2gg9evh47fn9z.cloudfront.net/800px_COLOURBOX8132424.jpg);
+    font-size: 50pt;
+    font-family: Arial Rounded MT Bold;
+}
