@@ -1,0 +1,71 @@
+<html>
+
+<head>
+    <title>Event Handler</title>
+    <style>
+        a.one {
+            color: red;
+            background-color: transparent;
+            text-decoration: none;
+        }
+        
+        a.two {
+            color: green;
+            background-color: transparent;
+            text-decoration: none;
+        }
+        
+        a.three {
+            color: blue;
+            background-color: transparent;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+
+
+<body>
+    <p><a class="one" id="one" href="https://www.w3schools.com/">Visit W3Schools.com!</a></p>
+    <div id="text1">This is text</div>
+
+    <p><a class="two" id="two" href="https://www.w3schools.com/">Visit W3Schools.com!</a></p>
+    <div id="text2">This is text</div>
+
+    <p><a class="three" id="three" href="https://www.w3schools.com/">Visit W3Schools.com!</a></p>
+    <div id="text3">This is text</div>
+</body>
+<script>
+    one = document.getElementById('one');
+    text1 = document.getElementById('text1');
+
+    one.addEventListener('mouseover', function handleMouseOver() {
+        text1.style.color = 'red';
+    });
+    one.addEventListener('mouseout', function handleMouseOut() {
+        text1.style.color = 'black';
+    });
+
+    two = document.getElementById('two');
+    text2 = document.getElementById('text2');
+
+    two.addEventListener('mouseover', function handleMouseOver() {
+        text2.style.color = 'green';
+    });
+    two.addEventListener('mouseout', function handleMouseOut() {
+        text2.style.color = 'black';
+    });
+
+    three = document.getElementById('three');
+    text3 = document.getElementById('text3');
+
+    three.addEventListener('mouseover', function handleMouseOver() {
+        text3.style.color = 'blue';
+    });
+    three.addEventListener('mouseout', function handleMouseOut() {
+        text3.style.color = 'black';
+    });
+</script>
+
+
+</html>
