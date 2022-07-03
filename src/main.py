@@ -1,18 +1,13 @@
-from enum import Enum
-from typing import Union
-
-from fastapi import FastAPI, Depends, Request
+from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 
 from fastapi import FastAPI
-from pydantic import BaseModel
 
-import schema
 from database import SessionLocal, engine
-import model
-from model import Authors
+import models
+from models import Authors, Comic, Tags
 
-model.Base.metadata.create_all(bind=engine)
+models.Base.metadata.create_all(bind=engine)
 
 def get_database_session():
     try:
@@ -24,8 +19,18 @@ def get_database_session():
 app = FastAPI()
 
 @app.get("/authors")
-async def read_movies(request: Request, db: Session = Depends(get_database_session)):
+async def read_authors( db: Session = Depends(get_database_session)):
     records = db.query(Authors).all()
+    return records
+
+@app.get("/comic")
+async def read_comic( db: Session = Depends(get_database_session)):
+    records = db.query(Comic).all()
+    return records
+
+@app.get("/tags")
+async def read_tags( db: Session = Depends(get_database_session)):
+    records = db.query(Tags).all()
     return records
 
 # The function parameters will be recognized as follows:
