@@ -1,11 +1,9 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy import Integer
 from sqlalchemy.orm import Session
-
-from fastapi import FastAPI
-
 from database import SessionLocal, engine
 import models
-from models import Authors, Comic, Tags
+from models import Author, Comic, Tag
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -20,7 +18,7 @@ app = FastAPI()
 
 @app.get("/authors")
 async def read_authors( db: Session = Depends(get_database_session)):
-    records = db.query(Authors).all()
+    records = db.query(Author).all()
     return records
 
 @app.get("/comic")
@@ -30,9 +28,15 @@ async def read_comic( db: Session = Depends(get_database_session)):
 
 @app.get("/tags")
 async def read_tags( db: Session = Depends(get_database_session)):
-    records = db.query(Tags).all()
+    records = db.query(Tag).all()
     return records
 
+@app.get("/authors/{author_id}")
+def read_single_author(author_id: int, db: Session = Depends(get_database_session)):
+    record = db.query(Author).filter(Author.author_id == author_id).first()
+    if record is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return record
 # The function parameters will be recognized as follows:
 
 # If the parameter is also declared in the path, it will be used as a path parameter.
