@@ -1,9 +1,11 @@
+from sre_constants import SUCCESS
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy import Integer
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
 import models
-from models import Author, Comic, Tag
+from models import Account, Author, Comic, Tag
+from pydantic import BaseModel
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -37,6 +39,22 @@ def read_single_author(author_id: int, db: Session = Depends(get_database_sessio
     if record is None:
         raise HTTPException(status_code=404, detail="User not found")
     return record
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+    
+@app.post('/login')
+def login(request_data: LoginRequest, db: Session = Depends(get_database_session)):
+    record = db.query(Account).filter(Account.username == request_data.username).first()
+    if record is None:
+        raise HTTPException(status_code=404, detail="Acount not found")
+    if (record.password == request_data.password):
+        return 'Success'
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    
 # The function parameters will be recognized as follows:
 
 # If the parameter is also declared in the path, it will be used as a path parameter.
