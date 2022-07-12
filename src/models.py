@@ -29,6 +29,7 @@ class Comic(Base):
     total_view = Column(Integer)
     rating = Column(Float)
     des = Column(String(50))
+    thumbnail = Column(String(100))
 
 class Author(Base):
     __tablename__ = "authors"

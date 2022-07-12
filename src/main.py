@@ -88,7 +88,7 @@ async def read_comic(db: Session = Depends(get_database_session)):
 #                       Tag.name.label("tag_name"),
                        Comic.current_chapter, Comic.rating, Comic.comic_id, Comic.status,
                        Comic.last_uploaded, Comic.total_view,
-                       Comic.des).limit(5).all()
+                       Comic.des, Comic.thumbnail).limit(5).all()
     if records is None:
         raise HTTPException(status_code=404, detail="No comic to display")
     return records
