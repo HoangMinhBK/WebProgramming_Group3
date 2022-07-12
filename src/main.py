@@ -101,7 +101,7 @@ async def read_link(comic_id: int, chap_num: int, db: Session = Depends(get_data
 
 @app.get("/tags")
 async def read_tags(db: Session = Depends(get_database_session)):
-    records = db.query(Tagging).all()
+    records = db.query(Tag.name).all()
     return records
 
 @app.get("/authors/{author_id}")
