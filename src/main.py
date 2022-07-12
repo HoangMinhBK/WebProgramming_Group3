@@ -7,9 +7,10 @@ import models
 import jwt
 from typing import Union, Any
 from datetime import datetime, timedelta
-from models import Account, Author, Comic, Tag
+from models import Account, Author, Comic, Tagging, Tag, Chapter, Link
 from pydantic import BaseModel
 from security import validate_token
+from sqlalchemy import  and_, or_
 
 SECURITY_ALGORITHM = 'HS256'
 SECRET_KEY = '123456'
@@ -68,15 +69,40 @@ async def read_authors(db: Session = Depends(get_database_session)):
 
 @app.get("/comic")
 async def read_comic(db: Session = Depends(get_database_session)):
-    records = db.query(Comic).all()
+    records = db.query(Comic.first_uploaded, Comic.name, Comic.author_id,
+                       Author.name.label("author_name"),
+#                       Tag.name.label("tag_name"),
+                       Comic.current_chapter, Comic.rating, Comic.comic_id, Comic.status,
+                       Comic.last_uploaded, Comic.total_view,
+                       Comic.des).all()
+    if records is None:
+        raise HTTPException(status_code=404, detail="No comic to display")
     return records
 
+@app.get("/comic/{comic_id}")
+async def read_single_comic(comic_id: int, db: Session = Depends(get_database_session)):
+    records = db.query(Comic.first_uploaded, Comic.name, Comic.author_id,
+                       Author.name.label("author_name"),
+                       Tag.name.label("tag_name"),
+                       Comic.current_chapter, Comic.rating, Comic.comic_id, Comic.status,
+                       Comic.last_uploaded, Comic.total_view,
+                       Comic.des).filter(Comic.comic_id == comic_id).all()
+    if records is None:
+        raise HTTPException(status_code=404, detail="comic not found")
+    return records
+
+@app.get("/comics/{comic_id}/chapters/{chap_num}")
+async def read_link(comic_id: int, chap_num: int, db: Session = Depends(get_database_session)):
+    records = db.query(Chapter.chapter_id).filter(Chapter.comic_id == comic_id, Chapter.chap_num == chap_num)
+    records = db.query(Link.link).filter(Link.linkid.in_(records)).all()
+    if records is None:
+        raise HTTPException(status_code=404, detail="link not found")
+    return records
 
 @app.get("/tags")
 async def read_tags(db: Session = Depends(get_database_session)):
-    records = db.query(Tag).all()
+    records = db.query(Tagging).all()
     return records
-
 
 @app.get("/authors/{author_id}")
 def read_single_author(author_id: int, db: Session = Depends(get_database_session)):

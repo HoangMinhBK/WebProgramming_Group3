@@ -4,6 +4,7 @@ from sqlalchemy.schema import Column
 from sqlalchemy.types import String, Integer, Text
 from sqlalchemy.orm import relationship
 from database import Base
+from database import SessionLocal, engine
 
 class Account(Base):
     __tablename__ = "accounts"
@@ -27,6 +28,7 @@ class Comic(Base):
     current_chapter = Column(Integer)
     total_view = Column(Integer)
     rating = Column(Float)
+    des = Column(String(50))
 
 class Author(Base):
     __tablename__ = "authors"
@@ -47,7 +49,12 @@ class Chapter(Base):
     views = Column(Integer)
     likes = Column(Integer)
     comments = Column(Integer)
-    link = Column(String(100))
+    link = Column(Integer)
+
+class Link(Base):
+    __tablename__ = "chapter_link"
+    linkid = Column(Integer, ForeignKey("chapter.link"))
+    link = Column(String(50), primary_key=True, index=True)
 
 # class Comment(Base):
 #     __tablename__ = "comments"
