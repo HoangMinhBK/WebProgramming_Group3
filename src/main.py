@@ -11,6 +11,13 @@ from models import Account, Author, Comic, Tagging, Tag, Chapter, Link
 from pydantic import BaseModel
 from security import validate_token
 from sqlalchemy import  and_, or_
+from fastapi.middleware.cors import CORSMiddleware
+
+origins = [
+    "http://localhost",
+    "http://localhost:8000",
+    "http://localhost:3000"
+]
 
 SECURITY_ALGORITHM = 'HS256'
 SECRET_KEY = '123456'
@@ -27,6 +34,13 @@ def get_database_session():
 
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def generate_token(username: Union[str, Any]) -> str:
