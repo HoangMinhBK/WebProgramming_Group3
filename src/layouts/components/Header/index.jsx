@@ -1,4 +1,4 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, Divider } from "@mui/material";
 import { useCustomTheme } from "src/contexts/themeContext";
 import SearchBar from "src/components/SearchBar";
 import { NavLink } from "react-router-dom";
@@ -31,7 +31,8 @@ export default function Header() {
         position: { xsm: "fixed" },
         top: 0,
         left: 0,
-        backgroundImage: `linear-gradient(to right, ${bleuDeFrance} , ${lightSkyBlue})`,
+        // backgroundImage: `linear-gradient(to right, ${bleuDeFrance} , ${lightSkyBlue})`,
+        background: cobaltBlue,
         borderBottomWidth: 1,
         borderBottomColor: "divider",
         borderBottomStyle: "solid",
@@ -44,19 +45,19 @@ export default function Header() {
         justifyContent="space-between"
         alignItems="center"
       >
-        <Typography
-          variant="h4"
-          sx={{ color: aliceBlue, fontFamily: "Ubuntu", fontWeight: "bold" }}
-        >
-          HUST Manga
-        </Typography>
+        <NavLink to="/" style={{ textDecoration: "none" }}>
+          <Typography
+            variant="h4"
+            sx={{ color: aliceBlue, fontFamily: "Ubuntu", fontWeight: "bold" }}
+          >
+            HUST Manga
+          </Typography>
+        </NavLink>
         <SearchBar />
 
         {account ? (
           <Box display="flex" alignItems="center">
-            <Typography
-              sx={{ fontFamily: "ubuntu", color: greenBlue, mr: 0.5 }}
-            >
+            <Typography sx={{ fontFamily: "ubuntu", color: "white", mr: 0.5 }}>
               Welcome
             </Typography>
             <Typography
@@ -64,13 +65,12 @@ export default function Header() {
                 fontFamily: "ubuntu",
                 fontWeight: "bold",
                 mr: 1,
-                color: cobaltBlue,
+                color: "white",
               }}
             >
               {account}
             </Typography>
             <Button
-              variant="contained"
               sx={{ borderRadius: 10, background: brightNavyBlue }}
               onClick={() => {
                 setAccount(undefined);
@@ -92,10 +92,7 @@ export default function Header() {
         ) : (
           <Box display="flex">
             <NavLink to="/login" style={{ textDecoration: "none" }}>
-              <Button
-                variant="contained"
-                sx={{ mr: 3, borderRadius: 10, background: brightNavyBlue }}
-              >
+              <Button sx={{ mr: 3 }}>
                 <Typography
                   sx={{
                     color: aliceBlue,
@@ -107,11 +104,9 @@ export default function Header() {
                 </Typography>
               </Button>
             </NavLink>
+            <Divider orientation="vertical" />
             <NavLink to="/register" style={{ textDecoration: "none" }}>
-              <Button
-                variant="contained"
-                sx={{ borderRadius: 10, background: brightNavyBlue }}
-              >
+              <Button>
                 <Typography
                   sx={{
                     color: aliceBlue,

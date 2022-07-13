@@ -76,6 +76,12 @@ export default function Register() {
               fullWidth
               sx={{ mb: 3 }}
             />
+            <TextField
+              label="Confirm password"
+              type="password"
+              fullWidth
+              sx={{ mb: 3 }}
+            />
             <Button
               variant="contained"
               fullWidth

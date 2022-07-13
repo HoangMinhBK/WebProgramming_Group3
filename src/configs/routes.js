@@ -21,9 +21,15 @@ const routeConfig = [
     layout: LayoutOptions.BLANK,
   },
   {
-    path: "/comics",
+    path: "/comics/:id",
     exact: true,
     component: React.lazy(() => import("../pages/Comics")),
+    layout: LayoutOptions.MAIN,
+  },
+  {
+    path: "/comics/:id/chapters/:chapterId",
+    exact: true,
+    component: React.lazy(() => import("../pages/Comics/Chapter")),
     layout: LayoutOptions.MAIN,
   },
 

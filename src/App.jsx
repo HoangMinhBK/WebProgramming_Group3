@@ -4,10 +4,10 @@ import routes from "./configs/routes";
 import { Layouts } from "./layouts";
 import ThemeProvider from "src/contexts/themeContext";
 import AccountProvider from "src/contexts/accountContext";
-import { SnackbarProvider, VariantType, useSnackbar } from "notistack";
+import ComicProvider from "./contexts/comicContext";
+import { SnackbarProvider } from "notistack";
 
 function App() {
-
   const [account, setAccount] = useState(localStorage.getItem("account"));
   const value = { account, setAccount };
 
@@ -43,45 +43,47 @@ function App() {
     <SnackbarProvider maxSnack={3}>
       <AccountProvider value={value}>
         <ThemeProvider>
-          <Switch>
-            {Object.keys(Layouts).map((layout, idx) => {
-              const LayoutTag = Layouts[layout];
-              const { layoutRoutes, layoutPaths } =
-                filterRoutesAndPathsByLayout(layout);
+          <ComicProvider>
+            <Switch>
+              {Object.keys(Layouts).map((layout, idx) => {
+                const LayoutTag = Layouts[layout];
+                const { layoutRoutes, layoutPaths } =
+                  filterRoutesAndPathsByLayout(layout);
 
-              return (
-                <Route key={idx} path={[...layoutPaths]}>
-                  <LayoutTag>
-                    <Switch>
-                      {layoutRoutes.map((route) => (
-                        <Route
-                          key={route.path}
-                          path={route.path}
-                          exact={route.exact === true}
-                          render={(props) => {
-                            const Component = route.component;
-                            return (
-                              <Suspense fallback={null}>
-                                <Component {...props} />
-                              </Suspense>
-                            );
-                          }}
-                        />
-                      ))}
-                    </Switch>
-                  </LayoutTag>
-                </Route>
-              );
-            })}
-            {redirectRoutes.map((route) => (
-              <Redirect
-                from={route.path}
-                key={route.path}
-                to={route.to}
-                exact={route.exact}
-              />
-            ))}
-          </Switch>
+                return (
+                  <Route key={idx} path={[...layoutPaths]}>
+                    <LayoutTag>
+                      <Switch>
+                        {layoutRoutes.map((route) => (
+                          <Route
+                            key={route.path}
+                            path={route.path}
+                            exact={route.exact === true}
+                            render={(props) => {
+                              const Component = route.component;
+                              return (
+                                <Suspense fallback={null}>
+                                  <Component {...props} />
+                                </Suspense>
+                              );
+                            }}
+                          />
+                        ))}
+                      </Switch>
+                    </LayoutTag>
+                  </Route>
+                );
+              })}
+              {redirectRoutes.map((route) => (
+                <Redirect
+                  from={route.path}
+                  key={route.path}
+                  to={route.to}
+                  exact={route.exact}
+                />
+              ))}
+            </Switch>
+          </ComicProvider>
         </ThemeProvider>
       </AccountProvider>
     </SnackbarProvider>

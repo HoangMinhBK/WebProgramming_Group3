@@ -1,94 +1,39 @@
 import { Box, Link, Typography } from "@mui/material";
 import { Fragment } from "react";
 import ScrollToTop from "./ScrollToTop";
+import Background from "src/assets/images/footer.jpg";
 
 export default function Footer() {
   return (
-    <Fragment>
+    <>
       <Box
         component="footer"
         sx={{
           pt: 4,
-          pb: 2,
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          justifyContent: "flex-start",
+          alignItems: "flex-end",
           flexDirection: { xs: "column", sm: "row" },
-          gap: 1,
+          backgroundImage: `url(${Background})`,
+          backgroundPosition: "right",
+          backgroundRepeat: "no-repeat",
+          height: "350px",
+          mb: -13,
         }}
       >
-        <Box sx={{ order: 1 }}>
+        <Box>
           <Typography
             variant="body2"
-            color="secondary.main"
+            fontFamily="ubuntu"
             align="center"
-            gutterBottom
+            sx={{ mb: 4 }}
           >
-            COPYRIGHT © 2021{" "}
-            <Link
-              display="inline"
-              href="https://trava.finance"
-              sx={{
-                textDecoration: "none",
-                "&:hover": { textDecoration: "underline" },
-              }}
-            >
-              Trava.Finance
-            </Link>
-            . All rights reserved
+            COPYRIGHT © 2022 Hoang Minh - Hai Dang - The Kiet . All rights
+            reserved
           </Typography>
-        </Box>
-        <Box
-          sx={{
-            order: { xs: 0, sm: 2 },
-            display: "flex",
-            gap: 1.5,
-            mr: { xs: 0, sm: 5 },
-          }}
-        >
-          <Link
-            target="_blank"
-            href="https://t.me/trava_finance"
-            rel="noreferrer noopener"
-            sx={{
-              color: "secondary.main",
-              "&:hover": { color: "primary.main" },
-            }}
-          >
-          </Link>
-          <Link
-            target="_blank"
-            href="https://twitter.com/trava_finance"
-            rel="noreferrer noopener"
-            sx={{
-              color: "secondary.main",
-              "&:hover": { color: "primary.main" },
-            }}
-          >
-          </Link>
-          <Link
-            target="_blank"
-            href="https://medium.com/@travafinance"
-            rel="noreferrer noopener"
-            sx={{
-              color: "secondary.main",
-              "&:hover": { color: "primary.main" },
-            }}
-          >
-          </Link>
-          <Link
-            target="_blank"
-            href="https://www.reddit.com/r/TravaFinance"
-            rel="noreferrer noopener"
-            sx={{
-              color: "secondary.main",
-              "&:hover": { color: "primary.main" },
-            }}
-          >
-          </Link>
         </Box>
       </Box>
       <ScrollToTop />
-    </Fragment>
+    </>
   );
 }

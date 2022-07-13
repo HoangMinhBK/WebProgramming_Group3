@@ -4,23 +4,23 @@ import Footer from "./components/Footer/index";
 import Header from "./components/Header/index";
 
 const MainContentWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(4, 2, 7, 2),
+  padding: theme.spacing(4, 8, 7, 8),
   marginLeft: 0,
   minHeight: "calc(100vh - 56px)",
   height: "100%",
   transition: "margin-left 300ms ease",
   display: "flex",
   flexDirection: "column",
-  [theme.breakpoints.up("xs")]: {
-    marginLeft: 80,
-    padding: theme.spacing(4, 2, 0, 2),
-  },
-  [theme.breakpoints.up("md")]: {
-    marginLeft: 220,
-  },
-  [theme.breakpoints.up("lg")]: {
-    padding: theme.spacing(4, 4, 0, 4),
-  },
+  // [theme.breakpoints.up("xs")]: {
+  //   marginLeft: 80,
+  //   padding: theme.spacing(4, 2, 0, 2),
+  // },
+  // [theme.breakpoints.up("md")]: {
+  //   marginLeft: 220,
+  // },
+  // [theme.breakpoints.up("lg")]: {
+  //   padding: theme.spacing(4, 4, 0, 4),
+  // },
 }));
 
 export default function MainLayout(props) {
