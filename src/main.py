@@ -1,3 +1,4 @@
+import datetime
 from sre_constants import SUCCESS
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy import Integer
@@ -5,9 +6,10 @@ from sqlalchemy.orm import Session
 from database import SessionLocal, engine
 import models
 import jwt
+from account.forms import AccoutCreateForm
 from typing import Union, Any
-from datetime import datetime, timedelta
-from models import Account, Author, Comic, Tagging, Tag, Chapter, Link
+from datetime import timedelta, date
+from models import Account, Author, Comic, Tag, Chapter, Link
 from pydantic import BaseModel
 from security import validate_token
 from sqlalchemy import  and_, or_
@@ -125,7 +127,36 @@ def read_single_author(author_id: int, db: Session = Depends(get_database_sessio
         raise HTTPException(status_code=404, detail="User not found")
     return record
 
-
+@app.post("/register")
+def register(form : AccoutCreateForm, db: Session = Depends(get_database_session)):
+    if not form.display_name:
+        raise HTTPException(status_code=400, detail="Name is required")
+    if not form.username or not len(form.username) > 3:
+        raise HTTPException(status_code=400, detail="Username should be > 3 characters") 
+    if not form.email or not (form.email.__contains__("@")):
+        raise HTTPException(status_code=400, detail="Email is required")
+    if not form.password or not len(form.password) >= 6:
+        raise HTTPException(status_code=400, detail="Password must be > 6 characters")
+    row = db.query(Account).count()
+    account = Account(
+        account_id = row + 1, 
+        display_name = form.display_name, 
+        username = form.username, 
+        password = form.password, 
+        email = form.email, 
+        created_time = date.today(), 
+        account_type = "normal"
+    )
+    record = db.query(Account).filter(Account.username == account.username).first()
+    if record is not None:
+        raise HTTPException(status_code=400, detail="Duplicate username")
+    record = db.query(Account).filter(Account.email== account.email).first()
+    if record is not None:
+        raise HTTPException(status_code=400, detail="Duplicate email")
+    db.add(account)
+    db.commit()
+    db.refresh(account)
+    return account
 # The function parameters will be recognized as follows:
 
 # If the parameter is also declared in the path, it will be used as a path parameter.
