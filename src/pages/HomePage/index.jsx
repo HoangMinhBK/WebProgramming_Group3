@@ -3,18 +3,17 @@ import { Box } from "@mui/material";
 import { useComicContext } from "src/contexts/comicContext";
 
 export default function HomePage() {
-  const comicList = useComicContext();
-  console.log(comicList);
+  const { comic, originalComic } = useComicContext();
   return (
     <Box
       width="100%"
       display="flex"
       alignItems="center"
       justifyContent="center"
-      sx={{ mt: 5 }}
+      sx={{ mt: 10 }}
     >
       <Box display="flex" flexWrap="wrap" justifyContent="space-evenly">
-        {comicList?.map((comic, index) => (
+        {originalComic?.map((comic, index) => (
           <ComicCard
             key={index}
             id={comic.comic_id}

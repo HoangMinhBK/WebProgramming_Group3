@@ -28,7 +28,7 @@ export default function Header() {
       sx={{
         height: 55,
         width: "100%",
-        position: { xsm: "fixed" },
+        position: "fixed",
         top: 0,
         left: 0,
         // backgroundImage: `linear-gradient(to right, ${bleuDeFrance} , ${lightSkyBlue})`,

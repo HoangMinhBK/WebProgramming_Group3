@@ -6,9 +6,11 @@ const ComicContext = createContext();
 
 export default function ComicProvider({ children }) {
   const [comic, setComic] = useState([]);
+  const [originalComic, setOriginalComic] = useState([]);
   const fetchData = async () => {
     const data = await Axios.get(`${baseURL}comic`).then((res) => res.data);
     setComic(data);
+    setOriginalComic(data);
     return data;
   };
   useEffect(() => {
@@ -16,7 +18,9 @@ export default function ComicProvider({ children }) {
   }, []);
 
   return (
-    <ComicContext.Provider value={comic}>{children}</ComicContext.Provider>
+    <ComicContext.Provider value={{ originalComic, comic, setComic }}>
+      {children}
+    </ComicContext.Provider>
   );
 }
 export const useComicContext = () => useContext(ComicContext);
