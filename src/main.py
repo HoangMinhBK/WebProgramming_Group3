@@ -1,4 +1,3 @@
-import datetime
 from sre_constants import SUCCESS
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy import Integer
@@ -8,7 +7,7 @@ import models
 import jwt
 from account.forms import AccoutCreateForm
 from typing import Union, Any
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime
 from models import Account, Author, Comic, Tag, Chapter, Link
 from pydantic import BaseModel
 from security import validate_token
@@ -16,9 +15,11 @@ from sqlalchemy import  and_, or_
 from fastapi.middleware.cors import CORSMiddleware
 
 origins = [
-    "http://localhost",
+   "http://localhost:3000",
+   "http://localhost:3000/login",
     "http://localhost:8000",
-    "http://localhost:3000"
+    "http://localhost:8000/login",
+    "http://localhost:8000/register",
 ]
 
 SECURITY_ALGORITHM = 'HS256'
@@ -40,7 +41,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
 )
 
