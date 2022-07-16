@@ -1,1 +1,1 @@
-export const baseURL = "https://0m2mg1.deta.dev/";
+export const baseURL = "https://ojrkcs.deta.dev/";
