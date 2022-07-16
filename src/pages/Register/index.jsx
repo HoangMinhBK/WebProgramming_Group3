@@ -1,4 +1,10 @@
-import { TextField, Box, Typography, Button } from "@mui/material";
+import {
+  TextField,
+  Box,
+  Typography,
+  Button,
+  useMediaQuery,
+} from "@mui/material";
 import { useCustomTheme } from "src/contexts/themeContext";
 import { useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -22,6 +28,8 @@ export default function Register() {
   } = useCustomTheme();
 
   const { enqueueSnackbar } = useSnackbar();
+
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const [res, setRes] = useState("");
 
@@ -70,8 +78,8 @@ export default function Register() {
       alignItems="center"
     >
       <Box
-        height={650}
-        width={400}
+        height={isMobile ? 600 : 650}
+        width={isMobile ? "85%" : 400}
         display="flex"
         flexDirection="column"
         sx={{ background: "white", borderRadius: 5 }}
@@ -79,7 +87,7 @@ export default function Register() {
         alignItems="center"
       >
         <Box
-          width={350}
+          width={isMobile ? "90%" : 350}
           display="flex"
           flexDirection="column"
           alignItems="center"
@@ -96,7 +104,7 @@ export default function Register() {
             Create a new account
           </Typography>
           <Box
-            width={350}
+            width="100%"
             display="flex"
             flexDirection="column"
             alignItems="center"

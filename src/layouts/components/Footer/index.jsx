@@ -1,9 +1,10 @@
-import { Box, Link, Typography } from "@mui/material";
+import { Box, Link, Typography, useMediaQuery } from "@mui/material";
 import { Fragment } from "react";
 import ScrollToTop from "./ScrollToTop";
 import Background from "src/assets/images/footer.jpg";
 
 export default function Footer() {
+  const isMobile = useMediaQuery("(max-width: 600px)");
   return (
     <>
       <Box
@@ -14,10 +15,10 @@ export default function Footer() {
           justifyContent: "flex-start",
           alignItems: "flex-end",
           flexDirection: { xs: "column", sm: "row" },
-          backgroundImage: `url(${Background})`,
+          backgroundImage: !isMobile && `url(${Background})`,
           backgroundPosition: "right",
           backgroundRepeat: "no-repeat",
-          height: "350px",
+          height: !isMobile && "350px",
           mb: -13,
         }}
       >

@@ -1,4 +1,4 @@
-import { Box, Typography, Button, Modal } from "@mui/material";
+import { Box, Typography, Button, Modal, useMediaQuery } from "@mui/material";
 import { baseURL } from "src/configs/api";
 import { NavLink } from "react-router-dom";
 import { useCustomTheme } from "src/contexts/themeContext";
@@ -45,6 +45,8 @@ export default function Comics() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const isMobile = useMediaQuery("(max-width: 600px)");
+
   return (
     <>
       <Modal
@@ -55,51 +57,83 @@ export default function Comics() {
       >
         <Box
           sx={{
+            background: "red",
             position: "absolute",
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
             backgroundColor: "white",
-            width: 1000,
+            width: isMobile ? "100%" : 800,
             boxShadow: 24,
-            p: 4,
+            maxHeight: "450px",
+            overflowY: "scroll",
+            px: 2,
           }}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
         >
-          <Typography id="modal-modal-title" variant="h5" component="h2">
+          <Typography
+            id="modal-modal-title"
+            variant="h5"
+            component="h2"
+            sx={{ my: 2, fontFamily: "Ubuntu", fontWeight: "bold" }}
+          >
             Chapters
           </Typography>
-          {chapterArray.map((chapter, index) => (
-            <NavLink
-              to={`${comic.comic_id}/chapters/${index + 1}`}
-              style={{ textDecoration: "none" }}
-            >
-              <Button key={index}>
-                <Typography variant="h6">{chapter}</Typography>
-              </Button>
-            </NavLink>
-          ))}
+          <Box display="flex" flexWrap="wrap" justifyContent="space-evenly">
+            {chapterArray.map((chapter, index) => (
+              <NavLink
+                to={`${comic.comic_id}/chapters/${index + 1}`}
+                style={{ textDecoration: "none" }}
+              >
+                <Button key={index}>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontFamily: "Ubuntu", fontWeight: "bold" }}
+                  >
+                    {chapter}
+                  </Typography>
+                </Button>
+              </NavLink>
+            ))}
+          </Box>
         </Box>
       </Modal>
 
       <Box width="100%" display="flex" justifyContent="center" sx={{ mt: 10 }}>
         <Box
-          width="60%"
+          width={isMobile ? "100%" : "60%"}
           display="flex"
           justifyContent="space-evenly"
           flexWrap="wrap"
         >
-          <Box width="35%" display="flex" flexDirection="column">
+          <Box
+            width={isMobile ? "100%" : "35%"}
+            display="flex"
+            flexDirection="column"
+            sx={{ mb: 3 }}
+          >
             <img
               src={comic.thumbnail || DefaultImage}
               alt={comic.name}
               width="100%"
               height="auto"
-              style={{ borderRadius: "10px 10px 0px 0px" }}
+              style={{ borderRadius: "10px" }}
             />
-            <Box width="100%" display="flex" justifyContent="space-evenly">
+            <Box
+              width="100%"
+              display="flex"
+              justifyContent="space-evenly"
+              flexWrap="wrap"
+            >
               <Button
                 variant="contained"
-                sx={{ mt: 3, background: dodgerBlue }}
+                sx={{
+                  mt: 3,
+                  background: dodgerBlue,
+                  width: isMobile ? "100%" : undefined,
+                }}
                 disableFocusRipple
                 disableElevation
                 disableTouchRipple
@@ -113,6 +147,7 @@ export default function Comics() {
                 sx={{
                   mt: 3,
                   background: aliceBlue,
+                  width: isMobile ? "100%" : undefined,
                   "&:hover": {
                     //you want this to be the same as the backgroundColor above
                     backgroundColor: aliceBlue,
@@ -131,9 +166,9 @@ export default function Comics() {
               </Button>
             </Box>
           </Box>
-          <Box width="50%">
+          <Box width={isMobile ? "100%" : "50%"}>
             <Typography
-              variant="h3"
+              variant={isMobile ? "h4" : "h3"}
               sx={{ fontFamily: "ubuntu", fontWeight: "bold" }}
             >
               {comic.name}
@@ -146,7 +181,7 @@ export default function Comics() {
             <Box>
               <Typography
                 variant="body1"
-                sx={{ fontStyle: "italic", fontFamily: "ubuntu" }}
+                sx={{ fontStyle: "italic", fontFamily: "ubuntu", mt: 2 }}
               >
                 {comic.des}
               </Typography>

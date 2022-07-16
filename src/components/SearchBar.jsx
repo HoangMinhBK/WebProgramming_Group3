@@ -7,6 +7,7 @@ import {
   Link,
   Collapse,
   ClickAwayListener,
+  useMediaQuery,
 } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
 import { useComicContext } from "src/contexts/comicContext";
@@ -51,6 +52,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function PrimarySearchAppBar() {
+  const isMobile = useMediaQuery("(max-width: 600px)");
   const { originalComic, comic, setComic } = useComicContext();
 
   const [open, setOpen] = useState(false);
@@ -73,7 +75,7 @@ export default function PrimarySearchAppBar() {
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
       <Box display="flex" flexDirection="column">
-        <Box sx={{ flexGrow: 1, minWidth: 500 }}>
+        <Box sx={{ flexGrow: 1, minWidth: !isMobile && 500 }}>
           <Search
             onClick={() => {
               setOpen(true);
@@ -96,7 +98,7 @@ export default function PrimarySearchAppBar() {
         <Collapse
           in={open}
           sx={{
-            width: 500,
+            width: !isMobile ? 500 : "100%",
             zIndex: 100,
             position: "fixed",
             top: 55,
@@ -105,6 +107,8 @@ export default function PrimarySearchAppBar() {
             overflowY: "auto",
             borderRadius: "10px 0px 0px 10px",
             mt: 1,
+            left: isMobile && 0,
+            boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.5)",
           }}
         >
           {comic.map((comic, index) => (

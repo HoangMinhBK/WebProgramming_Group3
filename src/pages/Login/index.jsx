@@ -1,4 +1,10 @@
-import { TextField, Box, Typography, Button } from "@mui/material";
+import {
+  TextField,
+  Box,
+  Typography,
+  Button,
+  useMediaQuery,
+} from "@mui/material";
 import { useCustomTheme } from "src/contexts/themeContext";
 import { useHistory } from "react-router-dom";
 import Background from "src/assets/images/manga_bg.jpg";
@@ -45,6 +51,8 @@ export default function Login() {
     }
   }, [enqueueSnackbar, history, setAccount, status, username]);
 
+  const isMobile = useMediaQuery("(max-width:600px)");
+
   return (
     <Box
       height="100vh"
@@ -65,7 +73,7 @@ export default function Login() {
     >
       <Box
         height={500}
-        width={400}
+        width={isMobile ? "85%" : 400}
         display="flex"
         flexDirection="column"
         sx={{ background: "white", borderRadius: 5 }}
@@ -74,7 +82,7 @@ export default function Login() {
       >
         <Box
           height={400}
-          width={350}
+          width={isMobile ? "90%" : 350}
           display="flex"
           flexDirection="column"
           alignItems="center"
@@ -90,7 +98,7 @@ export default function Login() {
             Login to HUST Manga
           </Typography>
           <Box
-            width={350}
+            width="100%"
             display="flex"
             flexDirection="column"
             alignItems="center"
