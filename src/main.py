@@ -14,13 +14,6 @@ from security import validate_token
 from sqlalchemy import  and_, or_
 from fastapi.middleware.cors import CORSMiddleware
 
-origins = [
-   "http://localhost:3000",
-   "http://localhost:3000/login",
-    "http://localhost:8000",
-    "http://localhost:8000/login",
-    "http://localhost:8000/register",
-]
 
 SECURITY_ALGORITHM = 'HS256'
 SECRET_KEY = '123456'
@@ -39,7 +32,7 @@ def get_database_session():
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
