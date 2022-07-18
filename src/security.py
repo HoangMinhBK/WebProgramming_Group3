@@ -25,3 +25,9 @@ def validate_token(http_authorization_credentials=Depends(reusable_oauth2)):
             status_code=403,
             detail=f"Could not validate credentials",
         )
+
+
+def get_account_id(http_authorization_credentials=Depends(reusable_oauth2)):
+    payload = jwt.decode(http_authorization_credentials.credentials,
+                         SECRET_KEY, algorithms=[SECURITY_ALGORITHM])
+    return payload.get('account_id')
