@@ -61,7 +61,6 @@ class LoginRequest(BaseModel):
 class LoginReturn(BaseModel):
     token: str
     display_name: str
-    subscribe_list: List[Comic] = []
 
 
 @app.post('/login')
@@ -72,15 +71,7 @@ def login(request_data: LoginRequest, db: Session = Depends(get_database_session
         raise HTTPException(status_code=404, detail="Acount not found")
     if (record.password == request_data.password):
         token = generate_token(record.account_id)
-        records = db.query(Subscribe).filter(
-            record.account_id == Subscribe.account_id)
-        subscribe_list = list()
-        for subscribe in records:
-            comic = db.query(Comic).filter(
-                Comic.comic_id == subscribe.comic_id).first()
-            subscribe_list.append(comic)
-
-        return LoginReturn(token=token, display_name=record.display_name, subscribe_list=subscribe_list)
+        return LoginReturn(token=token, display_name=record.display_name)
     else:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -136,6 +127,15 @@ async def read_link(comic_id: int, chap_num: int, db: Session = Depends(get_data
         raise HTTPException(status_code=404, detail="link not found")
     return records
 
+@app.get("/subscribe/list", dependencies=[Depends(validate_token)])
+async def list_subscribe(account_id: int = Depends(get_account_id), db: Session = Depends(get_database_session)):
+    records = db.query(Subscribe).filter(account_id == Subscribe.account_id)
+    subscribe_list = list()
+    for subscribe in records:
+        comic = db.query(Comic).filter(
+            Comic.comic_id == subscribe.comic_id).first()
+        subscribe_list.append(comic)
+    return subscribe_list
 
 @app.post("/subscribe/add/{comic_id}", dependencies=[Depends(validate_token)])
 async def add_subscribe(comic_id: int, account_id: int = Depends(get_account_id), db: Session = Depends(get_database_session)):
