@@ -28,8 +28,8 @@ class Comic(Base):
     current_chapter = Column(Integer)
     total_view = Column(Integer)
     rating = Column(Float)
-    des = Column(String(50))
-    thumbnail = Column(String(100))
+    thumb = Column(String(40))
+    descr = Column(String(100))
 
 class Author(Base):
     __tablename__ = "authors"
@@ -50,11 +50,10 @@ class Chapter(Base):
     views = Column(Integer)
     likes = Column(Integer)
     comments = Column(Integer)
-    link = Column(Integer)
 
 class Link(Base):
     __tablename__ = "chapter_link"
-    linkid = Column(Integer, ForeignKey("chapter.link"))
+    linkid = Column(Integer, ForeignKey("chapter.chapter_id"))
     link = Column(String(50), primary_key=True, index=True)
 
 # class Comment(Base):
@@ -79,12 +78,19 @@ class Link(Base):
 #     account_id = Column(Integer, ForeignKey("accounts.account_id"))
 #     date = Column(DATETIME)
 
+# class Read(Base):
+#     __tablename__ = "readt"
+#     read_id = Column(Integer, primary_key=True, index=True)
+#     chapter_id = Column(Integer, ForeignKey("chapter.chapter_id"))
+#     account_id = Column(Integer, ForeignKey("accounts.account_id"))
+#     date = Column(DATETIME)
+
 class Subscribe(Base):
     __tablename__ = "subscribe"
     subscribe_id = Column(Integer, primary_key=True, index=True)
     account_id = Column(Integer, ForeignKey("accounts.account_id"))
     comic_id = Column(Integer, ForeignKey("comic.comic_id"))
-
+0
 class Tagging(Base):
     __tablename__ = "tagging"
     tagging_id = Column(Integer, primary_key=True, index=True)
@@ -97,3 +103,4 @@ class Tag(Base):
     name = Column(String(100), unique=True)
     description = Column(Text())
 
+4

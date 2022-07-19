@@ -3851,3 +3851,6 @@ src/venv/lib/python3.8/site-packages/PyJWT-2.4.0.dist-info/RECORD
 src/venv/lib/python3.8/site-packages/PyJWT-2.4.0.dist-info/REQUESTED
 src/venv/lib/python3.8/site-packages/PyJWT-2.4.0.dist-info/top_level.txt
 src/venv/lib/python3.8/site-packages/PyJWT-2.4.0.dist-info/WHEEL
+src/__pycache__/testing.cpython-38.pyc
+insertSQL.sql.zip
+src/account/__pycache__/forms.cpython-38.pyc
