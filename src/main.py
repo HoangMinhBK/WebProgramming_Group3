@@ -9,7 +9,7 @@ import jwt
 from account.forms import AccoutCreateForm
 from typing import Union, Any, List
 from datetime import timedelta, date, datetime
-from models import Account, Author, Comic, Subscribe, Tag, Chapter, Link, Tagging
+from models import Account, Author, Comic, Subscribe, Tag, Chapter, Link, Comment
 from pydantic import BaseModel, BaseConfig
 from security import get_account_id, validate_token
 from sqlalchemy import and_, or_
@@ -99,7 +99,7 @@ async def read_comic(db: Session = Depends(get_database_session)):
         + "INNER JOIN tagging as ta ON c.comic_id = ta.comic_id "
         + "INNER JOIN tags as t on t.tag_id = ta.tag_id "
         + "GROUP BY c.comic_id LIMIT 10")
-    
+
     if records is None:
         raise HTTPException(status_code=404, detail="No comic to display")
     list = []
@@ -117,7 +117,7 @@ async def read_single_comic(comic_id: int, db: Session = Depends(get_database_se
         + "INNER JOIN tags as t on t.tag_id = ta.tag_id "
         + "WHERE c.comic_id = :cid "
         + "GROUP BY c.comic_id LIMIT 1",
-        {'cid' : comic_id}
+        {'cid': comic_id}
     )
     if records is None:
         raise HTTPException(status_code=404, detail="comic not found")
@@ -158,6 +158,7 @@ async def add_subscribe(comic_id: int, account_id: int = Depends(get_account_id)
     db.refresh(subscribe)
     return subscribe
 
+
 @app.post("/subscribe/remove/{comic_id}", dependencies=[Depends(validate_token)])
 async def remove_subscribe(comic_id: int, account_id: int = Depends(get_account_id), db: Session = Depends(get_database_session)):
     record = db.query(Comic).filter(Comic.comic_id == comic_id).first()
@@ -171,7 +172,8 @@ async def remove_subscribe(comic_id: int, account_id: int = Depends(get_account_
     db.delete(record)
     db.commit()
     return "Unsubscribe successfully"
-    
+
+
 @app.get("/tags")
 async def read_tags(db: Session = Depends(get_database_session)):
     records = db.query(Tag.name).all()
@@ -184,6 +186,40 @@ def read_single_author(author_id: int, db: Session = Depends(get_database_sessio
     if record is None:
         raise HTTPException(status_code=404, detail="User not found")
     return record
+
+
+@app.post("/comment/add/{comic_id}", dependencies=[Depends(validate_token)])
+async def add_comment(comment_content: str, comic_id: int, account_id: int = Depends(get_account_id), db: Session = Depends(get_database_session)):
+    record = db.query(Chapter.chapter_id).filter(
+        Chapter.comic_id == comic_id).first()
+    if record is None:
+        raise HTTPException(status_code=404, detail="Comic not found")
+    row = db.query(Comment).count()
+    chapter = record[0]
+    comment = Comment(
+        comment_id=row + 1,
+        chapter_id=chapter,
+        account_id=account_id,
+        date=date.today(),
+        content=comment_content
+    )
+    db.add(comment)
+    db.commit()
+    db.refresh(comment)
+    return comment
+
+
+@app.get("/comment/list/{comic_id}")
+async def list_comment(comic_id: int, db: Session = Depends(get_database_session)):
+    records = db.execute("SELECT display_name, content "
+                         + "FROM accounts as a JOIN comments as cm ON a.account_id = cm.account_id "
+                         + "WHERE cm.chapter_id in (SELECT chapter_id FROM chapter WHERE comic_id = :cid)",
+                         {'cid': comic_id}
+                         )
+    list = []
+    for row in records:
+        list.append(row)
+    return list
 
 
 @app.post("/register")

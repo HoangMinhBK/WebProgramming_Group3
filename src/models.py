@@ -56,13 +56,13 @@ class Link(Base):
     linkid = Column(Integer, ForeignKey("chapter.chapter_id"))
     link = Column(String(100), primary_key=True, index=True)
 
-# class Comment(Base):
-#     __tablename__ = "comments"
-#     comment_id = Column(Integer, primary_key=True, index=True)
-#     chapter_id = Column(Integer, ForeignKey("chapter.chapter_id"))
-#     account_id = Column(Integer, ForeignKey("accounts.account_id"))
-#     date = Column(DATETIME)
-#     content = Column(Text())
+class Comment(Base):
+    __tablename__ = "comments"
+    comment_id = Column(Integer, primary_key=True, index=True)
+    chapter_id = Column(Integer, ForeignKey("chapter.chapter_id"))
+    account_id = Column(Integer, ForeignKey("accounts.account_id"))
+    date = Column(DATETIME)
+    content = Column(Text())
 
 # class Follow(Base):
 #     __tablename__ = "follows"
