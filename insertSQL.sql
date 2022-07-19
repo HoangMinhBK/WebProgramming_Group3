@@ -50,7 +50,7 @@ create table comic (
     total_view      int         not null,
     rating          varchar(20) not null,
     thumb           varchar(100),
-    descr           varchar(150),
+    descr           varchar(400),
     constraint comic_authors_author_id_fk
         foreign key (author_id) references authors (author_id)
 );
