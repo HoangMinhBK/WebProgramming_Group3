@@ -8,8 +8,8 @@ import jwt
 from account.forms import AccoutCreateForm
 from typing import Union, Any, List
 from datetime import timedelta, date, datetime
-from models import Account, Author, Comic, Tag, Chapter, Link, Subscribe
-from pydantic import BaseModel
+from models import Account, Author, Comic, Subscribe, Tag, Chapter, Link
+from pydantic import BaseModel, BaseConfig
 from security import get_account_id, validate_token
 from sqlalchemy import  and_, or_
 from fastapi.middleware.cors import CORSMiddleware
@@ -30,6 +30,7 @@ def get_database_session():
 
 
 app = FastAPI()
+BaseConfig.arbitrary_types_allowed = True 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -54,11 +55,11 @@ def generate_token(account_id: int) -> str:
 class LoginRequest(BaseModel):
     username: str
     password: str
-'''
+
 class LoginReturn(BaseModel):
     token: str
     display_name: str
-    follow_list: List[Comic] = []'''
+    subcribe_list: List[Comic] = []
 
 @app.post('/login')
 def login(request_data: LoginRequest, db: Session = Depends(get_database_session)):
@@ -69,11 +70,12 @@ def login(request_data: LoginRequest, db: Session = Depends(get_database_session
     if (record.password == request_data.password):
         token = generate_token(record.account_id)
         records = db.query(Subscribe).filter(record.account_id == Subscribe.account_id)
-        follow_list = list()
-        for comic in records:
-            follow_list.append(comic)
+        subcribe_list = list()
+        for subcribe in records:
+            comic = db.query(Comic).filter(Comic.comic_id == subcribe.comic_id).first()
+            subcribe_list.append(comic)
         
-        return LoginReturn(token=token, display_name=record.display_name, follow_list=follow_list)
+        return LoginReturn(token=token, display_name=record.display_name, subcribe_list=subcribe_list)
     else:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -116,12 +118,24 @@ async def read_link(comic_id: int, chap_num: int, db: Session = Depends(get_data
         raise HTTPException(status_code=404, detail="link not found")
     return records
 
-@app.post("/follow/add/{comic_id}", dependencies=[Depends(validate_token)])
-async def add_follow(comic_id: int, account_id : int = Depends(get_account_id), db: Session = Depends(get_database_session)):
-    record = db.query(Comic).filter(Comic.comic_id == comic_id)
+@app.post("/subcribe/add/{comic_id}", dependencies=[Depends(validate_token)])
+async def add_subcribe(comic_id: int, account_id : int = Depends(get_account_id),db: Session = Depends(get_database_session)):
+    record = db.query(Comic).filter(Comic.comic_id == comic_id).first()
     if record is None:
         raise HTTPException(status_code=404, detail="Comic not found")
-    return record
+    record = db.query(Subscribe).filter(Subscribe.comic_id == comic_id, Subscribe.account_id == account_id).first()
+    if not record is None:
+        raise HTTPException(status_code=400,detail="User have already subscribed")
+    row = db.query(Subscribe).count()
+    subscribe = Subscribe(
+        subscribe_id = row + 1,
+        account_id = account_id,
+        comic_id = comic_id
+    )
+    db.add(subscribe)
+    db.commit()
+    db.refresh(subscribe)
+    return subscribe
 
 @app.get("/tags")
 async def read_tags(db: Session = Depends(get_database_session)):
