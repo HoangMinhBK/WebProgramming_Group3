@@ -74,13 +74,13 @@ def login(request_data: LoginRequest, db: Session = Depends(get_database_session
         token = generate_token(record.account_id)
         records = db.query(Subscribe).filter(
             record.account_id == Subscribe.account_id)
-        subcribe_list = list()
-        for subcribe in records:
+        subscribe_list = list()
+        for subscribe in records:
             comic = db.query(Comic).filter(
-                Comic.comic_id == subcribe.comic_id).first()
-            subcribe_list.append(comic)
+                Comic.comic_id == subscribe.comic_id).first()
+            subscribe_list.append(comic)
 
-        return LoginReturn(token=token, display_name=record.display_name, subcribe_list=subcribe_list)
+        return LoginReturn(token=token, display_name=record.display_name, subscribe_list=subscribe_list)
     else:
         raise HTTPException(status_code=404, detail="User not found")
 
@@ -137,8 +137,8 @@ async def read_link(comic_id: int, chap_num: int, db: Session = Depends(get_data
     return records
 
 
-@app.post("/subcribe/add/{comic_id}", dependencies=[Depends(validate_token)])
-async def add_subcribe(comic_id: int, account_id: int = Depends(get_account_id), db: Session = Depends(get_database_session)):
+@app.post("/subscribe/add/{comic_id}", dependencies=[Depends(validate_token)])
+async def add_subscribe(comic_id: int, account_id: int = Depends(get_account_id), db: Session = Depends(get_database_session)):
     record = db.query(Comic).filter(Comic.comic_id == comic_id).first()
     if record is None:
         raise HTTPException(status_code=404, detail="Comic not found")
@@ -158,7 +158,20 @@ async def add_subcribe(comic_id: int, account_id: int = Depends(get_account_id),
     db.refresh(subscribe)
     return subscribe
 
-
+@app.post("/subscribe/remove/{comic_id}", dependencies=[Depends(validate_token)])
+async def remove_subscribe(comic_id: int, account_id: int = Depends(get_account_id), db: Session = Depends(get_database_session)):
+    record = db.query(Comic).filter(Comic.comic_id == comic_id).first()
+    if record is None:
+        raise HTTPException(status_code=404, detail="Comic not found")
+    record = db.query(Subscribe).filter(Subscribe.comic_id ==
+                                        comic_id, Subscribe.account_id == account_id).first()
+    if record is None:
+        raise HTTPException(
+            status_code=400, detail="User have not subscribed")
+    db.delete(record)
+    db.commit()
+    return "Unsubscribe successfully"
+    
 @app.get("/tags")
 async def read_tags(db: Session = Depends(get_database_session)):
     records = db.query(Tag.name).all()
