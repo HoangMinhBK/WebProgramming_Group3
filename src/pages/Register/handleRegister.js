@@ -15,10 +15,8 @@ export default async function handleRegister(
   };
   try {
     let res = await Axios.post(baseURL + "register", payload);
-    console.log(res);
     return res;
   } catch (err) {
-    console.log(err);
     return err.response;
   }
 }

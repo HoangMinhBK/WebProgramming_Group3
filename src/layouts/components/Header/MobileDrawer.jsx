@@ -77,7 +77,6 @@ export default function MobileDrawer({ open, setOpen, isMobile }) {
                 setAccount(undefined);
                 localStorage.removeItem("account");
                 localStorage.removeItem("jwt");
-                localStorage.removeItem("subscribe");
               }}
             >
               <Typography

@@ -95,7 +95,6 @@ export default function Header() {
                   setAccount(undefined);
                   localStorage.removeItem("account");
                   localStorage.removeItem("jwt");
-                  localStorage.removeItem("subscribe");
                 }}
               >
                 <Typography

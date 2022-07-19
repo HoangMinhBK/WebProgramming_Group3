@@ -25,6 +25,7 @@ export const ComicCardSkeleton = () => {
     >
       {arr.map((item, index) => (
         <Box
+          key={index}
           width={300}
           sx={{
             borderRadius: "10px",

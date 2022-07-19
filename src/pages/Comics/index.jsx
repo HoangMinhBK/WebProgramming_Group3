@@ -1,4 +1,11 @@
-import { Box, Typography, Button, Modal, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Button,
+  Modal,
+  useMediaQuery,
+  TextField,
+} from "@mui/material";
 import { baseURL } from "src/configs/api";
 import { NavLink } from "react-router-dom";
 import { useCustomTheme } from "src/contexts/themeContext";
@@ -6,15 +13,28 @@ import DefaultImage from "src/assets/images/default.png";
 import Axios from "axios";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useAccountContext } from "src/contexts/accountContext";
+import { LoadingBackdrop } from "src/components/Loading";
+
 export default function Comics() {
+  const { account } = useAccountContext();
   const id = Object.values(useParams())[0];
   const [comic, setComic] = useState({});
+  const [comments, setComments] = useState([]);
+  const [yourComment, setYourComment] = useState("");
   const [chapterArray, setChapterArray] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const fetchData = async () => {
     const data = await Axios.get(`${baseURL}comic/${id}`).then(
       (res) => res.data
     );
+    const cmt = await Axios.get(`${baseURL}comment/list/${id}`).then(
+      (res) => res.data
+    );
     setComic(data);
+    setComments(cmt);
+    console.log(cmt);
     setChapterArray(() => {
       var arr = [];
       for (let i = 1; i <= data.current_chapter; i++) {
@@ -27,6 +47,21 @@ export default function Comics() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const addComment = async () => {
+    const res = await Axios.post(
+      `${baseURL}comment/add/${id}?comment_content=${yourComment}`,
+      null,
+      { headers: { Authorization: `Bearer ${localStorage.getItem("jwt")}` } }
+    ).then((res) => res.status);
+    if (res === 200) {
+      const cmt = await Axios.get(`${baseURL}comment/list/${id}`).then(
+        (res) => res.data
+      );
+      setComments(cmt);
+      setIsLoading(false);
+    }
+  };
 
   const {
     aliceBlue,
@@ -48,7 +83,8 @@ export default function Comics() {
   const isMobile = useMediaQuery("(max-width: 600px)");
 
   return (
-    <>
+    <Box display="flex" flexDirection="column" alignItems="center">
+      <LoadingBackdrop open={isLoading} message="Publishing your comment..." />
       <Modal
         open={open}
         onClose={handleClose}
@@ -188,6 +224,93 @@ export default function Comics() {
           </Box>
         </Box>
       </Box>
-    </>
+      <Box width={isMobile ? "100%" : "60%"} sx={{ mt: 3 }}>
+        <Typography
+          variant="h5"
+          sx={{ fontFamily: "ubuntu", fontWeight: "bold", mb: 3 }}
+        >
+          Comments
+        </Typography>
+        {comments.map((comment) => (
+          <Box sx={{ mb: 3 }}>
+            <Typography
+              variant="body1"
+              sx={{
+                fontFamily: "ubuntu",
+                fontWeight: "bold",
+                color: greenBlue,
+              }}
+            >
+              {comment.display_name}
+            </Typography>
+            <Box
+              sx={{
+                py: 2,
+                borderRadius: "0px 20px 20px 20px",
+                background: uranianBlue,
+                width: isMobile ? "100%" : "50%",
+              }}
+            >
+              <Typography variant="body1" sx={{ fontFamily: "ubuntu", ml: 2 }}>
+                {comment.content}
+              </Typography>
+            </Box>
+          </Box>
+        ))}
+        {!account && (
+          <Typography variant="h6" sx={{ fontFamily: "ubuntu" }}>
+            You need to login to comment
+          </Typography>
+        )}
+        {account && (
+          <Box sx={{ mb: 3 }}>
+            <Typography
+              variant="body1"
+              sx={{
+                fontFamily: "ubuntu",
+                fontWeight: "bold",
+                color: greenBlue,
+                mb: 0.5,
+              }}
+            >
+              {localStorage.getItem("account")}
+            </Typography>
+            <Box
+              sx={{
+                width: isMobile ? "100%" : "50%",
+              }}
+            >
+              <TextField
+                placeholder="Write a comment..."
+                variant="outlined"
+                multiline
+                fullWidth
+                rows={3}
+                value={yourComment}
+                onChange={(e) => setYourComment(e.target.value)}
+              />
+            </Box>
+            <Box
+              width={isMobile ? "100%" : "50%"}
+              display="flex"
+              justifyContent="flex-end"
+              sx={{ mt: 2 }}
+            >
+              <Button
+                variant="contained"
+                disabled={yourComment === ""}
+                onClick={() => {
+                  setIsLoading(true);
+                  addComment();
+                  setYourComment("");
+                }}
+              >
+                Send
+              </Button>
+            </Box>
+          </Box>
+        )}
+      </Box>
+    </Box>
   );
 }

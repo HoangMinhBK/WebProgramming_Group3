@@ -5,12 +5,15 @@ import Tips from "src/components/Tips";
 import { useAccountContext } from "src/contexts/accountContext";
 import { ComicCardSkeleton } from "src/components/Loading";
 import { useCustomTheme } from "src/contexts/themeContext";
+import { useFavComicContext } from "src/contexts/favComicContext";
 import { useState } from "react";
 
 export default function HomePage() {
   const { originalComic, tags, comic, setComic } = useComicContext();
   const [active, setActive] = useState(-1);
   const { account } = useAccountContext();
+  const { favComic } = useFavComicContext();
+  console.log(favComic);
 
   const {
     aliceBlue,
@@ -28,7 +31,6 @@ export default function HomePage() {
   const filterComicByGenre = (genre) => {
     setComic(originalComic.filter((comic) => comic.tag_name === genre));
   };
-  console.log(account);
 
   return (
     <Box
@@ -40,6 +42,55 @@ export default function HomePage() {
       sx={{ mt: 10 }}
     >
       {!account && <Tips />}
+      {account && (
+        <Box
+          display="flex"
+          width="100%"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: "bold", fontFamily: "ubuntu", mb: 3 }}
+          >
+            Your favorite mangas
+          </Typography>
+          <Box
+            display="flex"
+            justifyContent="space-evenly"
+            flexWrap="wrap"
+            width="100%"
+          >
+            {favComic.length !== 0 &&
+              favComic?.map((comic, index) => (
+                <ComicCard
+                  key={index}
+                  id={comic.comic_id}
+                  name={comic.name}
+                  author_name={comic.author_name}
+                  current_chapter={comic.current_chapter}
+                  rating={comic.rating}
+                  status={comic.status}
+                  total_view={comic.total_view}
+                  thumbnail={comic.thumbnail}
+                  tag_name={comic.tag_name}
+                />
+              ))}
+          </Box>
+        </Box>
+      )}
+      <Typography
+        variant="h5"
+        sx={{
+          fontWeight: "bold",
+          fontFamily: "ubuntu",
+          alignSelf: "left",
+          mt: 2,
+        }}
+      >
+        All mangas
+      </Typography>
       <Box
         sx={{ mt: 4 }}
         display="flex"
@@ -74,6 +125,7 @@ export default function HomePage() {
           tags.length > 0 &&
           tags.map((tag, index) => (
             <Box
+              key={index}
               sx={{
                 py: 1,
                 px: 1.5,

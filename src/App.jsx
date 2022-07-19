@@ -1,15 +1,17 @@
-import { Suspense, useState} from "react";
+import { Suspense, useState, useEffect } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import routes from "./configs/routes";
 import { Layouts } from "./layouts";
 import ThemeProvider from "src/contexts/themeContext";
 import AccountProvider from "src/contexts/accountContext";
+import FavComicProvider from "./contexts/favComicContext";
 import ComicProvider from "./contexts/comicContext";
 import { SnackbarProvider } from "notistack";
 
 function App() {
   const [account, setAccount] = useState(localStorage.getItem("account"));
-  const [favComic, setFavComic] = useState(localStorage.getItem("subscribe"));
+  const [favComic, setFavComic] = useState([]);
+
   const value = { account, favComic, setFavComic, setAccount };
 
   const filterRoutesAndPathsByLayout = (layout) => {
@@ -44,47 +46,49 @@ function App() {
     <SnackbarProvider maxSnack={3}>
       <AccountProvider value={value}>
         <ThemeProvider>
-          <ComicProvider>
-            <Switch>
-              {Object.keys(Layouts).map((layout, idx) => {
-                const LayoutTag = Layouts[layout];
-                const { layoutRoutes, layoutPaths } =
-                  filterRoutesAndPathsByLayout(layout);
+          <FavComicProvider>
+            <ComicProvider>
+              <Switch>
+                {Object.keys(Layouts).map((layout, idx) => {
+                  const LayoutTag = Layouts[layout];
+                  const { layoutRoutes, layoutPaths } =
+                    filterRoutesAndPathsByLayout(layout);
 
-                return (
-                  <Route key={idx} path={[...layoutPaths]}>
-                    <LayoutTag>
-                      <Switch>
-                        {layoutRoutes.map((route) => (
-                          <Route
-                            key={route.path}
-                            path={route.path}
-                            exact={route.exact === true}
-                            render={(props) => {
-                              const Component = route.component;
-                              return (
-                                <Suspense fallback={null}>
-                                  <Component {...props} />
-                                </Suspense>
-                              );
-                            }}
-                          />
-                        ))}
-                      </Switch>
-                    </LayoutTag>
-                  </Route>
-                );
-              })}
-              {redirectRoutes.map((route) => (
-                <Redirect
-                  from={route.path}
-                  key={route.path}
-                  to={route.to}
-                  exact={route.exact}
-                />
-              ))}
-            </Switch>
-          </ComicProvider>
+                  return (
+                    <Route key={idx} path={[...layoutPaths]}>
+                      <LayoutTag>
+                        <Switch>
+                          {layoutRoutes.map((route) => (
+                            <Route
+                              key={route.path}
+                              path={route.path}
+                              exact={route.exact === true}
+                              render={(props) => {
+                                const Component = route.component;
+                                return (
+                                  <Suspense fallback={null}>
+                                    <Component {...props} />
+                                  </Suspense>
+                                );
+                              }}
+                            />
+                          ))}
+                        </Switch>
+                      </LayoutTag>
+                    </Route>
+                  );
+                })}
+                {redirectRoutes.map((route) => (
+                  <Redirect
+                    from={route.path}
+                    key={route.path}
+                    to={route.to}
+                    exact={route.exact}
+                  />
+                ))}
+              </Switch>
+            </ComicProvider>
+          </FavComicProvider>
         </ThemeProvider>
       </AccountProvider>
     </SnackbarProvider>

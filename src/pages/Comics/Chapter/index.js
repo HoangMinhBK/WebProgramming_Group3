@@ -12,7 +12,6 @@ export default function Chapter() {
   const comic_id = Object.values(useParams())[0];
   const chap_num = Object.values(useParams())[1];
   const { originalComic } = useComicContext();
-  console.log(originalComic);
   const comic = originalComic.filter(
     (comic, index) => index === comic_id - 1
   )[0];
@@ -22,7 +21,6 @@ export default function Chapter() {
       `${baseURL}comics/${comic_id}/chapters/${chap_num}`
     ).then((res) => res.data);
     setChapters(data);
-    console.log(chapters);
   };
   useEffect(() => {
     fetchData();

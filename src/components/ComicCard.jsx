@@ -1,4 +1,4 @@
-import { Box, Typography, Rating } from "@mui/material";
+import { Box, Typography, Rating, Button } from "@mui/material";
 import DefaultImage from "src/assets/images/default.png";
 import { useCustomTheme } from "src/contexts/themeContext";
 import { NavLink } from "react-router-dom";
@@ -6,35 +6,58 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Axios from "axios";
 import { baseURL } from "src/configs/api";
+import { useFavComicContext } from "src/contexts/favComicContext";
 
-export const isFavorite = (id) => {
-  if (
-    localStorage.getItem("subscribe") !== undefined ||
-    localStorage.getItem("subscribe") !== null
-  )
-    return localStorage.getItem("subscribe")?.includes(id);
-  return false;
+const headers = {
+  "Content-Type": "text/json",
+  Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+  "Access-Control-Allow-Origin": "*",
 };
 
-export const addToFavorite = async (comic_id) => {
-  const res1 = await Axios.post(`${baseURL}subscribe/add/${comic_id}`, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-    },
-  }).then((res) => res.status);
+export const isFavorite = (id, favComics) => {
+  return favComics.some((comic) => comic.comic_id === id);
+};
 
+export const addToFavorite = async (comic_id, setFavComic) => {
+  const res1 = await Axios.post(`${baseURL}subscribe/add/${comic_id}`, null, {
+    headers: headers,
+  }).then((res) => res.status);
+  if (res1 === 200) {
+    const res2 = await Axios.get(`${baseURL}subscribe/list`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    }).then((res) => res.data);
+    setFavComic(res2);
+  }
+};
+
+export const removeFromFavorite = async (comic_id, setFavComic) => {
+  const res1 = await Axios.post(
+    `${baseURL}subscribe/remove/${comic_id}`,
+    null,
+    {
+      headers: headers,
+    }
+  ).then((res) => res.status);
+  if (res1 === 200) {
+    const res2 = await Axios.get(`${baseURL}subscribe/list`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    }).then((res) => res.data);
+    setFavComic(res2);
+  }
 };
 
 export default function ComicCard({
   id,
   name,
-  author_name,
   tag_name,
   current_chapter,
   rating,
   status,
   total_view,
-  des,
   thumbnail,
 }) {
   const {
@@ -49,6 +72,7 @@ export default function ComicCard({
     greenBlue,
     cobaltBlue,
   } = useCustomTheme();
+  const { favComic, setFavComic } = useFavComicContext();
 
   const comicStatus = {
     ongoing: "orange",
@@ -83,10 +107,20 @@ export default function ComicCard({
               {name}
             </Typography>
           </NavLink>
-          {isFavorite(id) ? (
-            <FavoriteIcon sx={{ color: "#f74a56" }} />
+          {isFavorite(id, favComic) ? (
+            <Button
+              sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
+              onClick={() => removeFromFavorite(id, setFavComic)}
+            >
+              <FavoriteIcon sx={{ color: "#f74a56" }} />
+            </Button>
           ) : (
-            <FavoriteBorderIcon sx={{ color: "white" }} />
+            <Button
+              sx={{ minHeight: 0, minWidth: 0, padding: 0 }}
+              onClick={() => addToFavorite(id, setFavComic)}
+            >
+              <FavoriteBorderIcon sx={{ color: "white" }} />
+            </Button>
           )}
         </Box>
         <Typography
