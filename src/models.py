@@ -28,8 +28,8 @@ class Comic(Base):
     current_chapter = Column(Integer)
     total_view = Column(Integer)
     rating = Column(Float)
-    thumb = Column(String(100))
-    descr = Column(String(400))
+    thumbnail = Column(String(100))
+    des = Column(String(400))
 
 class Author(Base):
     __tablename__ = "authors"

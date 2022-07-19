@@ -49,13 +49,13 @@ create table comic (
     current_chapter varchar(20) not null,
     total_view      int         not null,
     rating          varchar(20) not null,
-    thumb           varchar(100),
-    descr           varchar(400),
+    thumbnail           varchar(100),
+    des          varchar(400),
     constraint comic_authors_author_id_fk
         foreign key (author_id) references authors (author_id)
 );
 
-insert into comic (comic_id, name, author_id, status, first_uploaded, last_uploaded, current_chapter, total_view, rating, thumb, descr) values
+insert into comic (comic_id, name, author_id, status, first_uploaded, last_uploaded, current_chapter, total_view, rating, thumnail, des) values
 (1, 'Death Note ', 13, 'ongoing', '2013-7-9', '2017-10-3', 49, 641421, 3.1, 'https://i.postimg.cc/JnsV4YDn/deathnote.jpg', 'A high school student named Light Turner discovers a mysterious notebook that has the power to kill anyone whose name is written within its pages, and launches a secret crusade to rid the world of criminals.'),
 (2, 'Naruto', 7, 'delayed', '2011-11-11', '2017-6-24' ,136, 5211, 3.4, 'https://i.postimg.cc/3rD5s6Qf/naruto.jpg', 'It tells the story of Naruto Uzumaki, a young ninja who seeks recognition from his peers and dreams of becoming the Hokage, the leader of his village.'),
 (3, 'Bleach', 27, 'completed', '2012-2-2', '2015-7-27' ,129, 979802, 1.1, 'https://i.postimg.cc/K8x6g8kC/bleach.jpg', 'It follows the adventures of the hotheaded teenager Ichigo Kurosaki, who inherits his parents destiny after he obtains the powers of a Soul Reaper—a death personification similar to the Grim Reaper—from another Soul Reaper, Rukia Kuchiki.'),
