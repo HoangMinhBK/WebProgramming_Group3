@@ -49,8 +49,8 @@ create table comic (
     current_chapter varchar(20) not null,
     total_view      int         not null,
     rating          varchar(20) not null,
-    thumb           varchar(40),
-    descr           varchar(100),
+    thumb           varchar(100),
+    descr           varchar(150),
     constraint comic_authors_author_id_fk
         foreign key (author_id) references authors (author_id)
 );
@@ -176,7 +176,7 @@ insert into chapter (chapter_id, comic_id, chap_num, num_pages, update_date, vie
 create table chapter_link
 (
     linkid      int not null,
-    link        varchar(30),
+    link        varchar(100),
     constraint chapter_link_chapter_id_fk
         foreign key (linkid) references chapter (chapter_id)
 );

@@ -88,7 +88,7 @@ async def read_authors(db: Session = Depends(get_database_session)):
 async def read_comic(db: Session = Depends(get_database_session)):
     records = db.query(Comic.first_uploaded, Comic.name, Comic.author_id,
                        Author.name.label("author_name"),
-#                       Tag.name.label("tag_name"),
+                       Tag.name.label("tag_name"),
                        Comic.current_chapter, Comic.rating, Comic.comic_id, Comic.status,
                        Comic.last_uploaded, Comic.total_view,
                        Comic.descr, Comic.thumb).limit(10).all()
