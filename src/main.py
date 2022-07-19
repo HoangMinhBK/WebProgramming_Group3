@@ -55,11 +55,11 @@ def generate_token(account_id: int) -> str:
 class LoginRequest(BaseModel):
     username: str
     password: str
-
+'''
 class LoginReturn(BaseModel):
     token: str
     display_name: str
-    subcribe_list: List[Comic] = []
+    subcribe_list: List[Comic] = []'''
 
 @app.post('/login')
 def login(request_data: LoginRequest, db: Session = Depends(get_database_session)):
