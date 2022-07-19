@@ -1,18 +1,20 @@
 import Axios from "axios";
 import { baseURL } from "src/configs/api";
-// test account:
-//username: rwackley0
-//pass: lP1bSYs5hfZ
+
 export default async function handleLogin(username, password) {
   let payload = { username: username, password: password };
   try {
     let res = await Axios.post(baseURL + "login", payload);
     if (res.status === 200) {
-      localStorage.setItem("account", username);
-      localStorage.setItem("jwt", res.data.token);
-      return res.status;
+      console.log(res.data.subscribe_list);
+      localStorage.setItem("jwt", res?.data?.token);
+      localStorage.setItem("account", res?.data?.display_name);
+      const ids = res.data.subscribe_list.map((item) => item.comic_id);
+      localStorage.setItem("subscribe", ids);
+      return res;
     }
   } catch (err) {
-    return err.response?.status;
+    return err.response;
   }
+  return <></>;
 }

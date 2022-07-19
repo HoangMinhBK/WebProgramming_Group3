@@ -2,6 +2,8 @@ import { createContext, useContext } from "react";
 
 const AccountContext = createContext({
   account: undefined,
+  favComic: [],
+  setFavComic: () => {},
   setAccount: () => {},
 });
 

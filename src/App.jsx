@@ -1,4 +1,4 @@
-import { Suspense, useState } from "react";
+import { Suspense, useState} from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import routes from "./configs/routes";
 import { Layouts } from "./layouts";
@@ -9,7 +9,8 @@ import { SnackbarProvider } from "notistack";
 
 function App() {
   const [account, setAccount] = useState(localStorage.getItem("account"));
-  const value = { account, setAccount };
+  const [favComic, setFavComic] = useState(localStorage.getItem("subscribe"));
+  const value = { account, favComic, setFavComic, setAccount };
 
   const filterRoutesAndPathsByLayout = (layout) => {
     const layoutRoutes = [];

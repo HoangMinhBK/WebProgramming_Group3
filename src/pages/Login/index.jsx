@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 import { useAccountContext } from "src/contexts/accountContext";
 import handleLogin from "./handleLogin";
 import { useSnackbar } from "notistack";
+import { LoadingBackdrop } from "src/components/Loading";
 
 export default function Login() {
   const {
@@ -32,24 +33,26 @@ export default function Login() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [status, setStatus] = useState("");
+  const [res, setRes] = useState("");
   const { setAccount } = useAccountContext();
 
   const { enqueueSnackbar } = useSnackbar();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    console.log(status);
-    if (status === 200) {
-      setAccount(username);
+    if (res?.status === 200) {
       enqueueSnackbar("Login successfully!", { variant: "success" });
       history.push("/");
-      setStatus("");
-    } else if (status === 404) {
+      setAccount(res?.data.display_name);
+      setOpen(false);
+      setRes("");
+    } else if (res?.status === 404) {
       setAccount(undefined);
       enqueueSnackbar("Login Failed! Please try again!", { variant: "error" });
-      setStatus("");
+      setRes("");
+      setOpen(false);
     }
-  }, [enqueueSnackbar, history, setAccount, status, username]);
+  }, [enqueueSnackbar, history, setAccount, res, username]);
 
   const isMobile = useMediaQuery("(max-width:600px)");
 
@@ -71,6 +74,7 @@ export default function Login() {
       justifyContent="center"
       alignItems="center"
     >
+      {res === "" && <LoadingBackdrop open={open} message="Signing in..." />}
       <Box
         height={500}
         width={isMobile ? "85%" : 400}
@@ -124,8 +128,9 @@ export default function Login() {
               disabled={username === "" || password === ""}
               sx={{ height: 50, background: dodgerBlue, mb: 3 }}
               onClick={async () => {
+                setOpen(true);
                 const res = await handleLogin(username, password);
-                setStatus(res);
+                setRes(res);
               }}
             >
               <Typography

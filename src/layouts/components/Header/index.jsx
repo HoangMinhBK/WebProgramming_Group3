@@ -40,7 +40,7 @@ export default function Header() {
           top: 0,
           left: 0,
           // backgroundImage: `linear-gradient(to right, ${bleuDeFrance} , ${lightSkyBlue})`,
-          background: cobaltBlue,
+          backgroundImage: `linear-gradient(to left, ${cobaltBlue} , ${dodgerBlue})`,
           borderBottomWidth: 1,
           borderBottomColor: "divider",
           borderBottomStyle: "solid",
@@ -95,6 +95,7 @@ export default function Header() {
                   setAccount(undefined);
                   localStorage.removeItem("account");
                   localStorage.removeItem("jwt");
+                  localStorage.removeItem("subscribe");
                 }}
               >
                 <Typography

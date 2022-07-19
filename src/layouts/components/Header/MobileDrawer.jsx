@@ -25,7 +25,7 @@ export default function MobileDrawer({ open, setOpen, isMobile }) {
       PaperProps={{
         sx: {
           width: 260,
-          background: cobaltBlue,
+          backgroundImage: `linear-gradient(to bottom left, ${cobaltBlue} , ${dodgerBlue})`,
           top: 55,
         },
       }}
@@ -77,6 +77,7 @@ export default function MobileDrawer({ open, setOpen, isMobile }) {
                 setAccount(undefined);
                 localStorage.removeItem("account");
                 localStorage.removeItem("jwt");
+                localStorage.removeItem("subscribe");
               }}
             >
               <Typography

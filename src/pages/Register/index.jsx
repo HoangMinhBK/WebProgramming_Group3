@@ -12,6 +12,7 @@ import Background from "src/assets/images/manga_bg.jpg";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import handleRegister from "./handleRegister";
 import { useSnackbar } from "notistack";
+import { LoadingBackdrop } from "src/components/Loading";
 
 export default function Register() {
   const {
@@ -39,23 +40,27 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (res?.status === 200) {
       enqueueSnackbar("Register successfully! Now you can log in", {
         variant: "success",
       });
+      setOpen(false);
       history.push("/login");
       setRes("");
     } else if (res?.status === 404) {
       enqueueSnackbar("Register Failed! Please try again!", {
         variant: "error",
       });
+      setOpen(false);
       setRes("");
     } else if (res?.status === 400) {
       enqueueSnackbar(res?.data?.detail, {
         variant: "error",
       });
+      setOpen(false);
       setRes("");
     }
   }, [enqueueSnackbar, history, res, username]);
@@ -77,6 +82,7 @@ export default function Register() {
       justifyContent="center"
       alignItems="center"
     >
+      {res === "" && <LoadingBackdrop open={open} message="Registering..." />}
       <Box
         height={isMobile ? 600 : 650}
         width={isMobile ? "85%" : 400}
@@ -165,6 +171,7 @@ export default function Register() {
                 password === ""
               }
               onClick={async () => {
+                setOpen(true);
                 const res = await handleRegister(
                   username,
                   displayName,

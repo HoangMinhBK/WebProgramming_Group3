@@ -16,7 +16,6 @@ export default function Chapter() {
   const comic = originalComic.filter(
     (comic, index) => index === comic_id - 1
   )[0];
-  console.log(comic);
   const [chapters, setChapters] = useState([]);
   const fetchData = async () => {
     const data = await Axios.get(

@@ -14,10 +14,10 @@ export default function Comics() {
     const data = await Axios.get(`${baseURL}comic/${id}`).then(
       (res) => res.data
     );
-    setComic(data[0]);
+    setComic(data);
     setChapterArray(() => {
       var arr = [];
-      for (let i = 1; i <= data[0].current_chapter; i++) {
+      for (let i = 1; i <= data.current_chapter; i++) {
         arr.push(i);
       }
       return arr;
@@ -57,7 +57,6 @@ export default function Comics() {
       >
         <Box
           sx={{
-            background: "red",
             position: "absolute",
             top: "50%",
             left: "50%",
