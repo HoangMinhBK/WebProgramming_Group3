@@ -35,7 +35,7 @@ export default function Chapter() {
       <Box
         display="flex"
         sx={{ my: 4 }}
-        width={isMobile ? "120%" : undefined}
+        width={isMobile ? "145%" : undefined}
         justifyContent="center"
       >
         <Typography
@@ -56,7 +56,7 @@ export default function Chapter() {
           <img
             src={Object.values(chapter)}
             alt=""
-            width={isMobile ? "130%" : "50%"}
+            width={isMobile ? "145%" : "50%"}
             key={index}
           />
         );
