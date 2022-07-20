@@ -86,10 +86,10 @@ async def read_authors(db: Session = Depends(get_database_session)):
 async def read_comic(db: Session = Depends(get_database_session)):
     records = db.execute(
         "SELECT first_uploaded, c.name as name, c.author_id as author_id, a.name as author_name, t.name as tag_name, current_chapter, rating, c.comic_id as comic_id, status, last_uploaded, total_view, des, thumbnail "
-        + "FROM comic as c INNER JOIN authors as a ON c.author_id = a.author_id "
-        + "INNER JOIN tagging as ta ON c.comic_id = ta.comic_id "
-        + "INNER JOIN tags as t on t.tag_id = ta.tag_id "
-        + "GROUP BY c.comic_id LIMIT 10")
+        + "FROM comic as c LEFT JOIN authors as a ON c.author_id = a.author_id "
+        + "LEFT JOIN tagging as ta ON c.comic_id = ta.comic_id "
+        + "LEFT JOIN tags as t on t.tag_id = ta.tag_id "
+        + "GROUP BY c.comic_id ORDER BY c.comic_id ASC LIMIT 10")
 
     if records is None:
         raise HTTPException(status_code=404, detail="No comic to display")
@@ -103,11 +103,11 @@ async def read_comic(db: Session = Depends(get_database_session)):
 async def read_single_comic(comic_id: int, db: Session = Depends(get_database_session)):
     records = db.execute(
         "SELECT first_uploaded, c.name as name, c.author_id as author_id, a.name as author_name, t.name as tag_name, current_chapter, rating, c.comic_id as comic_id, status, last_uploaded, total_view, des, thumbnail "
-        + "FROM comic as c INNER JOIN authors as a ON c.author_id = a.author_id "
-        + "INNER JOIN tagging as ta ON c.comic_id = ta.comic_id "
-        + "INNER JOIN tags as t on t.tag_id = ta.tag_id "
+        + "FROM comic as c LEFT JOIN authors as a ON c.author_id = a.author_id "
+        + "LEFT JOIN tagging as ta ON c.comic_id = ta.comic_id "
+        + "LEFT JOIN tags as t on t.tag_id = ta.tag_id "
         + "WHERE c.comic_id = :cid "
-        + "GROUP BY c.comic_id LIMIT 1",
+        + "GROUP BY c.comic_id ORDER BY c.comic_id ASC LIMIT 1",
         {'cid': comic_id}
     )
     if records is None:
