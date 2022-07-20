@@ -15,12 +15,13 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAccountContext } from "src/contexts/accountContext";
 import { LoadingBackdrop } from "src/components/Loading";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function Comics() {
   const { account } = useAccountContext();
   const id = Object.values(useParams())[0];
   const [comic, setComic] = useState({});
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState(undefined);
   const [yourComment, setYourComment] = useState("");
   const [chapterArray, setChapterArray] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -177,28 +178,6 @@ export default function Comics() {
               >
                 <Typography sx={{ fontFamily: "ubuntu" }}>Read now</Typography>
               </Button>
-              <Button
-                variant="contained"
-                sx={{
-                  mt: 3,
-                  background: aliceBlue,
-                  width: isMobile ? "100%" : undefined,
-                  "&:hover": {
-                    //you want this to be the same as the backgroundColor above
-                    backgroundColor: aliceBlue,
-                  },
-                }}
-                disableFocusRipple
-                disableElevation
-                disableTouchRipple
-                disableRipple
-              >
-                <Typography
-                  sx={{ fontFamily: "ubuntu", color: brightNavyBlue }}
-                >
-                  Add to favorite
-                </Typography>
-              </Button>
             </Box>
           </Box>
           <Box width={isMobile ? "100%" : "50%"}>
@@ -231,7 +210,28 @@ export default function Comics() {
         >
           Comments
         </Typography>
-        {comments.map((comment) => (
+        {!comments && (
+          <Box display="flex" alignItems="center" sx={{ mb: 2 }}>
+            <Typography sx={{ fontFamily: "ubuntu", mr: 2 }}>
+              Loading comments...
+            </Typography>
+            <CircularProgress />
+          </Box>
+        )}
+        {comments !== undefined && comments.length === 0 && (
+          <Typography
+            sx={{
+              fontWeight: "bold",
+              fontFamily: "ubuntu",
+              mb: 2,
+              color: "rgba(0,0,0,0,0.1)",
+            }}
+            variant="h6"
+          >
+            Be the first to comment on this manga!
+          </Typography>
+        )}
+        {comments?.map((comment) => (
           <Box sx={{ mb: 3 }}>
             <Typography
               variant="body1"
