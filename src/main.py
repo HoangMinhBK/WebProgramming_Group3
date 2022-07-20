@@ -1,6 +1,6 @@
 from sre_constants import SUCCESS
 from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy import Integer
+from sqlalchemy.sql.expression import func
 from sqlalchemy.sql import text
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
@@ -147,7 +147,7 @@ async def add_subscribe(comic_id: int, account_id: int = Depends(get_account_id)
     if not record is None:
         raise HTTPException(
             status_code=400, detail="User have already subscribed")
-    row = db.query(Subscribe).count()
+    row = db.query(func.max(Subscribe.subscribe_id)).scalar()
     subscribe = Subscribe(
         subscribe_id=row + 1,
         account_id=account_id,
@@ -194,7 +194,7 @@ async def add_comment(comment_content: str, comic_id: int, account_id: int = Dep
         Chapter.comic_id == comic_id).first()
     if record is None:
         raise HTTPException(status_code=404, detail="Comic not found")
-    row = db.query(Comment).count()
+    row = db.query(func.max(Comment.comment_id)).scalar()
     chapter = record[0]
     comment = Comment(
         comment_id=row + 1,
@@ -234,7 +234,7 @@ def register(form: AccoutCreateForm, db: Session = Depends(get_database_session)
     if not form.password or not len(form.password) >= 6:
         raise HTTPException(
             status_code=400, detail="Password must be > 6 characters")
-    row = db.query(Account).count()
+    row = db.query(func.max(Account.account_id)).scalar()
     account = Account(
         account_id=row + 1,
         display_name=form.display_name,
